@@ -18,7 +18,12 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             RoleHasPermissionsSeeder::class,
             ApiClientSeeder::class,
+            EventSeeder::class,
+            PartnersSeeder::class,
+            ArticleCategoriesSeeder::class,
             UsersSeeder::class,
+            ArticlesSeeder::class,
+            ArticleImagesSeeder::class,
         ]);
     }
 }
