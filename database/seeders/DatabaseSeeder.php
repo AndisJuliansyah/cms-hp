@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             ArticlesSeeder::class,
             ArticleImagesSeeder::class,
+            HpqSeeder::class,
+            HpqScoreSeeder::class,
         ]);
     }
 }
