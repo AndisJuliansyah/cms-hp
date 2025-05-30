@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use App\Models\HPQ;
+use App\Models\Hpq;
 use App\Helpers\ApiResponse;
 use Exception;
 
