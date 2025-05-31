@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('seo_description')->nullable();
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
+            $table->unsignedBigInteger('views')->default(0);
             $table->timestamps();
         });
     }

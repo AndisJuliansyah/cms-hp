@@ -45,6 +45,8 @@ class ArticleController extends Controller
                 return ApiResponse::error('Artikel tidak ditemukan', 404);
             }
 
+            $article->increment('views');
+
             return ApiResponse::success($article, 'Detail artikel berhasil diambil');
         } catch (Exception $e) {
             return ApiResponse::error('Gagal mengambil detail artikel', 500, [

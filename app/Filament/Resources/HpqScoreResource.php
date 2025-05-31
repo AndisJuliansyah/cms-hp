@@ -108,11 +108,13 @@ class HpqScoreResource extends Resource
 
     public static function canEdit(Model $record): bool
     {
-        return auth()->user()?->can('edit hpqscores');
+        $user = auth()->user();
+        return $user->hasRole('Super Admin') || $user->id === $record->jury_id;
     }
 
     public static function canDelete(Model $record): bool
     {
-        return auth()->user()?->can('delete hpqscores');
+        $user = auth()->user();
+        return $user->hasRole('Super Admin') || $user->id === $record->jury_id;
     }
 }
