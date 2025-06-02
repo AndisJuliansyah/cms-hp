@@ -22,6 +22,7 @@ class EventController extends Controller
                     'id' => $event->id,
                     'title' => $event->title,
                     'slug' => $event->slug,
+                    'description' => $event->description,
                     'location' => $event->location,
                     'event_date' => $event->event_date,
                     'poster_url' => $event->poster_path ? asset('storage/' . $event->poster_path) : null,

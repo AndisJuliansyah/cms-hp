@@ -16,8 +16,38 @@ class HPQController extends Controller
     {
         try {
             $perPage = $request->get('per_page', 10);
+            $search = $request->get('search');
+            $coffeeType = $request->get('coffee_type');
 
-            $hpqs = Hpq::paginate($perPage);
+            $query = Hpq::query();
+
+            if ($coffeeType) {
+                $query->where('coffee_type', $coffeeType);
+            }
+
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('code_hpq', 'like', "%$search%")
+                        ->orWhere('email', 'like', "%$search%")
+                        ->orWhere('full_name', 'like', "%$search%")
+                        ->orWhere('brand_name', 'like', "%$search%")
+                        ->orWhere('status', 'like', "%$search%");
+                });
+            }
+
+            $hpqs = $query->latest()->paginate($perPage);
+
+            if ($hpqs->isEmpty()) {
+                return ApiResponse::success([
+                    'items' => [],
+                    'pagination' => [
+                        'current_page' => $hpqs->currentPage(),
+                        'last_page' => $hpqs->lastPage(),
+                        'per_page' => $hpqs->perPage(),
+                        'total' => $hpqs->total(),
+                    ]
+                ], 'Tidak ada data HPQ yang ditemukan sesuai filter atau pencarian');
+            }
 
             $items = $hpqs->map(function ($hpq) {
                 return [
@@ -61,7 +91,6 @@ class HPQController extends Controller
             ]);
         }
     }
-
 
     public function show($code_hpq)
     {
