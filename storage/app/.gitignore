@@ -1,4 +1,7 @@
 *
+!app/
+!app/analytics/
+!app/analytics/credentials.json
 !private/
 !public/
 !.gitignore

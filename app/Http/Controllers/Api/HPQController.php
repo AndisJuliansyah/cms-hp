@@ -73,6 +73,7 @@ class HPQController extends Controller
                     'specific_goal' => $hpq->specific_goal,
                     'notes' => $hpq->notes,
                     'status' => $hpq->status,
+                    'updated_at' => $hpq->updated_at,
                 ];
             });
 
