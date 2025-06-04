@@ -49,6 +49,7 @@ class User extends Authenticatable
 
     public function canAccessFilament(): bool
     {
+        \Log::info('User  Roles: ', $this->getRoleNames()->toArray());
         return $this->hasAnyRole(['admin', 'editor', 'juri']);
     }
 }
