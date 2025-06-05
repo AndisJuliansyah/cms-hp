@@ -33,7 +33,7 @@ class AuthController extends Controller
             }
 
             return ApiResponse::success(null, 'Token issued')
-                    ->cookie('api_token', $token, 60 * 24 * 7, '/', null, true, true, false, 'Strict');
+                    ->cookie('api_token', $token, 60 * 24 * 7, '/', null, false, true, false, 'Lax');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return ApiResponse::error('Validation failed', 422, $e->errors());
 
@@ -64,7 +64,7 @@ class AuthController extends Controller
             $newToken = JWTAuth::refresh($token);
 
             return ApiResponse::success(null, 'Token refreshed')
-                ->cookie('api_token', $newToken, 60 * 24 * 7, '/', null, true, true, false, 'Strict');
+                ->cookie('api_token', $token, 60 * 24 * 7, '/', null, false, true, false, 'Lax');
 
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return ApiResponse::error('Invalid token', 401);
