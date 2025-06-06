@@ -125,6 +125,7 @@ class HPQController extends Controller
                 'specific_goal' => $hpq->specific_goal,
                 'notes' => $hpq->notes,
                 'status' => $hpq->status,
+                'updated_at' => $hpq->updated_at,
                 'score_summary' => $hpq->score_summary,
                 'scores' => $hpq->scores->map(function ($score) {
                     return [
