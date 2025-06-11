@@ -57,15 +57,11 @@ class ArticleResource extends Resource
                     ->columns(1)
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('seo_title')
-                    ->label('SEO Judul')
-                    ->maxLength(70)
-                    ->helperText('Judul SEO artikel, maksimal 70 karakter'),
+                    ->label('SEO Judul'),
 
                 Forms\Components\Textarea::make('seo_description')
                     ->label('SEO Deskripsi')
-                    ->rows(3)
-                    ->maxLength(160)
-                    ->helperText('Deskripsi SEO artikel, maksimal 160 karakter'),
+                    ->rows(3),
                 Forms\Components\Textarea::make('excerpt')->label('Deskripsi Singkat')->rows(3),
                 Forms\Components\RichEditor::make('body')->label('Konten')->required()->columnSpan('full'),
                 Forms\Components\Toggle::make('is_published')->label('Publikasi')->default(true),

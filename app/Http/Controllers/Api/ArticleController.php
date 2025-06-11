@@ -18,6 +18,14 @@ class ArticleController extends Controller
                 ->latest()
                 ->paginate($perPage);
 
+            $items = $articles->getCollection()->map(function ($article) {
+                $article->images->transform(function ($image) {
+                    $image->url = asset('storage/' . $image->image_path);
+                    return $image;
+                });
+                return $article;
+            });
+
             return ApiResponse::success([
                 'items' => $articles->items(),
                 'pagination' => [
