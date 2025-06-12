@@ -13,6 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Group;
 
 class HpqResource extends Resource
 {
@@ -23,9 +28,115 @@ class HpqResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+                ->schema([
+                    TextInput::make('email')
+                        ->email()
+                        ->required(),
+
+                    TextInput::make('full_name')
+                        ->label('Full Name')
+                        ->required(),
+
+                    TextInput::make('brand_name')
+                        ->label('Brand Name')
+                        ->required(),
+
+                    TextInput::make('contact_number')
+                        ->label('Contact Number')
+                        ->required(),
+
+                    Textarea::make('address')
+                        ->required(),
+
+                    Group::make([
+                        CheckboxList::make('customer_type')
+                            ->label('Customer Type')
+                            ->options([
+                                'Coffee Farm / Estate' => 'Coffee Farm / Estate',
+                                'Processing Facility' => 'Processing Facility',
+                                'Roastery' => 'Roastery',
+                                'Café / Retailer' => 'Café / Retailer',
+                                'Exporter / Importer' => 'Exporter / Importer',
+                                'Government Institution / NGO' => 'Government Institution / NGO',
+                                'Educational / Research Institution' => 'Educational / Research Institution',
+                                'Other' => 'Other',
+                            ])
+                            ->reactive()
+                            ->columns(2)
+                            ->required(),
+
+                        TextInput::make('customer_type_other')
+                            ->label('Please specify other customer type')
+                            ->visible(fn ($get) => in_array('Other', (array) $get('customer_type')))
+                            ->required(fn ($get) => in_array('Other', (array) $get('customer_type'))),
+                    ]),
+
+                    Group::make([
+                        CheckboxList::make('coffee_type')
+                            ->label('What type of coffee are you submitting for evaluation?')
+                            ->options([
+                                'Green Bean Arabica (Single Origin)' => 'Green Bean Arabica (Single Origin)',
+                                'Roasted Bean - Blend Arabica' => 'Roasted Bean - Blend Arabica',
+                                'Green Bean Canephora / Robusta (Single Origin)' => 'Green Bean Canephora / Robusta (Single Origin)',
+                                'Roasted Bean Canephora / Robusta' => 'Roasted Bean Canephora / Robusta',
+                                'Roasted Bean Arabica' => 'Roasted Bean Arabica',
+                                'Roasted Bean - Blend Arabica & Canephora / Robusta' => 'Roasted Bean - Blend Arabica & Canephora / Robusta',
+                                'Roasted Bean - Blend Canephora Robusta' => 'Roasted Bean - Blend Canephora Robusta',
+                                'Other' => 'Other',
+                            ])
+                            ->reactive()
+                            ->columns(2)
+                            ->required(),
+
+                        TextInput::make('coffee_type_other')
+                            ->label('Please specify other coffee type')
+                            ->visible(fn ($get) => in_array('Other', (array) $get('coffee_type')))
+                            ->required(fn ($get) => in_array('Other', (array) $get('coffee_type'))),
+                    ]),
+
+                    TextInput::make('coffee_sample_name')
+                        ->label('Coffee Sample Name')
+                        ->required(),
+
+                    TextInput::make('lot_number')
+                        ->label('Lot Number')
+                        ->required(),
+
+                    TextInput::make('total_lot_quantity')
+                        ->numeric()
+                        ->label('Total Lot Quantity')
+                        ->required(),
+
+                    TextInput::make('origin')
+                        ->required(),
+
+                    TextInput::make('variety')
+                        ->required(),
+
+                    TextInput::make('altitude')
+                        ->required(),
+
+                    TextInput::make('post_harvest_process')
+                        ->label('Post Harvest Process')
+                        ->required(),
+
+                    DatePicker::make('harvest_date')
+                        ->label('Harvest Date')
+                        ->required(),
+
+                    TextInput::make('green_bean_condition')
+                        ->label('Green Bean Condition')
+                        ->required(),
+
+                    TextInput::make('sort_before_sending')
+                        ->label('Sort Before Sending')
+                        ->required(),
+
+                    Textarea::make('specific_goal')
+                        ->label('Specific Goal'),
+
+                    Textarea::make('notes'),
+                ]);
     }
 
     public static function table(Table $table): Table
