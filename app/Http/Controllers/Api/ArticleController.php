@@ -14,9 +14,18 @@ class ArticleController extends Controller
     {
         try {
             $perPage = $request->get('per_page', 10);
-            $articles = Article::with(['category', 'images', 'author'])
-                ->latest()
-                ->paginate($perPage);
+            $search = $request->get('search');
+
+            $query = Article::with(['category', 'images', 'author'])->latest();
+
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('slug', 'like', '%' . $search . '%');
+                });
+            }
+
+            $articles = $query->paginate($perPage);
 
             $items = $articles->getCollection()->map(function ($article) {
                 $article->images->transform(function ($image) {
