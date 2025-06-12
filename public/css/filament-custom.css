@@ -1,6 +1,3 @@
-trix-editor {
-    background-color: #ffe !important;
-}
 /* Membuat toolbar Trix selalu terlihat saat scroll */
 trix-toolbar {
     position: sticky;
