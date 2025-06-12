@@ -141,6 +141,7 @@ class HPQController extends Controller
                         'sweetness' => $score->sweetness,
                         'clean_cup' => $score->clean_cup,
                         'overall' => $score->overall,
+                        'notes' => $score->notes
                     ];
                 }),
             ];
