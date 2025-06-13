@@ -48,51 +48,143 @@ class HpqResource extends Resource
                     Textarea::make('address')
                         ->required(),
 
-                    Group::make([
-                        CheckboxList::make('customer_type')
-                            ->label('Customer Type')
-                            ->options([
-                                'Coffee Farm / Estate' => 'Coffee Farm / Estate',
-                                'Processing Facility' => 'Processing Facility',
-                                'Roastery' => 'Roastery',
-                                'Café / Retailer' => 'Café / Retailer',
-                                'Exporter / Importer' => 'Exporter / Importer',
-                                'Government Institution / NGO' => 'Government Institution / NGO',
-                                'Educational / Research Institution' => 'Educational / Research Institution',
-                                'Other' => 'Other',
-                            ])
-                            ->reactive()
-                            ->columns(2)
-                            ->required(),
+                CheckboxList::make('customer_type')
+                    ->label('Customer Type')
+                    ->options([
+                        'Coffee Farm / Estate' => 'Coffee Farm / Estate',
+                        'Processing Facility' => 'Processing Facility',
+                        'Roastery' => 'Roastery',
+                        'Café / Retailer' => 'Café / Retailer',
+                        'Exporter / Importer' => 'Exporter / Importer',
+                        'Government Institution / NGO' => 'Government Institution / NGO',
+                        'Educational / Research Institution' => 'Educational / Research Institution',
+                        'Other' => 'Other',
+                    ])
+                    ->reactive()
+                    ->columns(2)
+                    ->required()
+                    ->formatStateUsing(function ($state) {
+                        $items = is_array($state) ? $state : explode(',', (string) $state);
+                        $valid = [
+                            'Coffee Farm / Estate',
+                            'Processing Facility',
+                            'Roastery',
+                            'Café / Retailer',
+                            'Exporter / Importer',
+                            'Government Institution / NGO',
+                            'Educational / Research Institution',
+                        ];
 
-                        TextInput::make('customer_type_other')
-                            ->label('Please specify other customer type')
-                            ->visible(fn ($get) => in_array('Other', (array) $get('customer_type')))
-                            ->required(fn ($get) => in_array('Other', (array) $get('customer_type'))),
-                    ]),
+                        return collect($items)
+                            ->map(fn ($item) => in_array($item, $valid) ? $item : 'Other')
+                            ->unique()
+                            ->values()
+                            ->all();
+                    })
+                    ->dehydrateStateUsing(function ($state, $get) {
+                        if (!is_array($state)) return $state;
 
-                    Group::make([
-                        CheckboxList::make('coffee_type')
-                            ->label('What type of coffee are you submitting for evaluation?')
-                            ->options([
-                                'Green Bean Arabica (Single Origin)' => 'Green Bean Arabica (Single Origin)',
-                                'Roasted Bean - Blend Arabica' => 'Roasted Bean - Blend Arabica',
-                                'Green Bean Canephora / Robusta (Single Origin)' => 'Green Bean Canephora / Robusta (Single Origin)',
-                                'Roasted Bean Canephora / Robusta' => 'Roasted Bean Canephora / Robusta',
-                                'Roasted Bean Arabica' => 'Roasted Bean Arabica',
-                                'Roasted Bean - Blend Arabica & Canephora / Robusta' => 'Roasted Bean - Blend Arabica & Canephora / Robusta',
-                                'Roasted Bean - Blend Canephora Robusta' => 'Roasted Bean - Blend Canephora Robusta',
-                                'Other' => 'Other',
-                            ])
-                            ->reactive()
-                            ->columns(2)
-                            ->required(),
+                        return implode(',', array_map(function ($item) use ($get) {
+                            return $item === 'Other'
+                                ? $get('customer_type_other')
+                                : $item;
+                        }, $state));
+                    }),
 
-                        TextInput::make('coffee_type_other')
-                            ->label('Please specify other coffee type')
-                            ->visible(fn ($get) => in_array('Other', (array) $get('coffee_type')))
-                            ->required(fn ($get) => in_array('Other', (array) $get('coffee_type'))),
-                    ]),
+                TextInput::make('customer_type_other')
+                    ->label('Please specify other customer type')
+                    ->reactive()
+                    ->visible(fn ($get) => in_array('Other', (array) $get('customer_type')))
+                    ->required(fn ($get) => in_array('Other', (array) $get('customer_type')))
+                    ->afterStateHydrated(function ($set, $record) {
+                        if (! $record) return;
+
+                        $valid = [
+                            'Coffee Farm / Estate',
+                            'Processing Facility',
+                            'Roastery',
+                            'Café / Retailer',
+                            'Exporter / Importer',
+                            'Government Institution / NGO',
+                            'Educational / Research Institution',
+                        ];
+
+                        $items = explode(',', (string) $record->customer_type);
+                        $custom = collect($items)->first(fn ($item) => !in_array($item, $valid));
+
+                        if ($custom) {
+                            $set('customer_type_other', $custom);
+                        }
+                    }),
+
+                CheckboxList::make('coffee_type')
+                    ->label('What type of coffee are you submitting for evaluation?')
+                    ->options([
+                        'Green Bean Arabica (Single Origin)' => 'Green Bean Arabica (Single Origin)',
+                        'Roasted Bean - Blend Arabica' => 'Roasted Bean - Blend Arabica',
+                        'Green Bean Canephora / Robusta (Single Origin)' => 'Green Bean Canephora / Robusta (Single Origin)',
+                        'Roasted Bean Canephora / Robusta' => 'Roasted Bean Canephora / Robusta',
+                        'Roasted Bean Arabica' => 'Roasted Bean Arabica',
+                        'Roasted Bean - Blend Arabica & Canephora / Robusta' => 'Roasted Bean - Blend Arabica & Canephora / Robusta',
+                        'Roasted Bean - Blend Canephora Robusta' => 'Roasted Bean - Blend Canephora Robusta',
+                        'Other' => 'Other',
+                    ])
+                    ->reactive()
+                    ->columns(2)
+                    ->required()
+                    ->formatStateUsing(function ($state) {
+                        $items = is_array($state) ? $state : explode(',', (string) $state);
+                        $valid = [
+                            'Green Bean Arabica (Single Origin)',
+                            'Roasted Bean - Blend Arabica',
+                            'Green Bean Canephora / Robusta (Single Origin)',
+                            'Roasted Bean Canephora / Robusta',
+                            'Roasted Bean Arabica',
+                            'Roasted Bean - Blend Arabica & Canephora / Robusta',
+                            'Roasted Bean - Blend Canephora Robusta',
+                        ];
+
+                        return collect($items)
+                            ->map(fn ($item) => in_array($item, $valid) ? $item : 'Other')
+                            ->unique()
+                            ->values()
+                            ->all();
+                    })
+                    ->dehydrateStateUsing(function ($state, $get) {
+                        if (!is_array($state)) return $state;
+
+                        return implode(',', array_map(function ($item) use ($get) {
+                            return $item === 'Other'
+                                ? $get('coffee_type_other')
+                                : $item;
+                        }, $state));
+                    }),
+
+                TextInput::make('coffee_type_other')
+                    ->label('Please specify other coffee type')
+                    ->reactive()
+                    ->visible(fn ($get) => in_array('Other', (array) $get('coffee_type')))
+                    ->required(fn ($get) => in_array('Other', (array) $get('coffee_type')))
+                    ->afterStateHydrated(function ($set, $record) {
+                        if (! $record) return;
+
+                        $valid = [
+                            'Green Bean Arabica (Single Origin)',
+                            'Roasted Bean - Blend Arabica',
+                            'Green Bean Canephora / Robusta (Single Origin)',
+                            'Roasted Bean Canephora / Robusta',
+                            'Roasted Bean Arabica',
+                            'Roasted Bean - Blend Arabica & Canephora / Robusta',
+                            'Roasted Bean - Blend Canephora Robusta',
+                        ];
+
+                        $items = explode(',', (string) $record->coffee_type);
+                        $custom = collect($items)->first(fn ($item) => !in_array($item, $valid));
+
+                        if ($custom) {
+                            $set('coffee_type_other', $custom);
+                        }
+                    }),
 
                     TextInput::make('coffee_sample_name')
                         ->label('Coffee Sample Name')
