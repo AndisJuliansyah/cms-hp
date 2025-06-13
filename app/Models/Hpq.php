@@ -45,7 +45,7 @@ class Hpq extends Model
         } elseif ($scoresCount < 3) {
             $newStatus = 'scoring';
         } else {
-            $newStatus = 'complete';
+            $newStatus = 'completed';
         }
 
         if ($this->status !== $newStatus) {
