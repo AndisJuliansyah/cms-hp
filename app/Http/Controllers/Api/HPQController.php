@@ -19,7 +19,7 @@ class HPQController extends Controller
             $search = $request->get('search');
             $coffeeType = $request->get('coffee_type');
 
-            $query = Hpq::query();
+            $query = Hpq::with('scores');
 
             if ($coffeeType) {
                 $query->where('coffee_type', $coffeeType);
@@ -73,6 +73,7 @@ class HPQController extends Controller
                     'specific_goal' => $hpq->specific_goal,
                     'notes' => $hpq->notes,
                     'status' => $hpq->status,
+                    'score_summary' => $hpq->score_summary,
                     'updated_at' => $hpq->updated_at,
                 ];
             });
