@@ -5,9 +5,7 @@ use App\Models\Hpq;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 
-Route::redirect('/', '/admin');
-
-Route::get('/admin/hpq/{hpq}/summary', function (Hpq $hpq) {
+Route::get('/hpq/{hpq}/summary', function (Hpq $hpq) {
     $hpq->load('scores');
 
     return view('filament.hpq-score-summary', [

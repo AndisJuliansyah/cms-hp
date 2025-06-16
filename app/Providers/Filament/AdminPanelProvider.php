@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/hp.png'))
             ->brandName('Heavenly Pour CMS')
             ->id('admin')
-            ->path('admin')
+            ->path('/')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
