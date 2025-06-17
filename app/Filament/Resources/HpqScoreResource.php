@@ -68,7 +68,12 @@ class HpqScoreResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('code_hpq')->label('Kode HPQ'),
                 Tables\Columns\TextColumn::make('jury.name')->label('Penilai'),
-                Tables\Columns\TextColumn::make('overall')->label('Skor Akhir'),
+                Tables\Columns\TextColumn::make('average_score')
+                    ->label('Skor Rata-Rata')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('total_score')
+                    ->label('Total Skor')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y, H:i'),
             ])
             ->filters([

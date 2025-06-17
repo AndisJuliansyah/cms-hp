@@ -11,7 +11,7 @@ class HpqScore extends Model
 {
     protected $fillable = [
         'code_hpq', 'jury_id', 'judge_name', 'fragrance_aroma', 'flavor', 'aftertaste', 'acidity',
-        'body', 'balance', 'uniformity', 'sweetness', 'clean_cup', 'overall'
+        'body', 'balance', 'uniformity', 'sweetness', 'clean_cup', 'overall', 'notes'
     ];
 
     public function hpq()
@@ -34,6 +34,17 @@ class HpqScore extends Model
 
         $total = collect($fields)->sum(fn($field) => $this->{$field});
         return round($total / count($fields), 2);
+    }
+
+    public function getTotalScoreAttribute()
+    {
+        $fields = [
+            'fragrance_aroma', 'flavor', 'aftertaste', 'acidity',
+            'body', 'balance', 'uniformity', 'sweetness',
+            'clean_cup', 'overall',
+        ];
+
+        return collect($fields)->sum(fn($field) => $this->{$field});
     }
 
     protected static function booted()
