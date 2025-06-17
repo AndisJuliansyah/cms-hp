@@ -16,6 +16,7 @@ use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
+use FilamentTiptapEditor\TiptapEditor;
 
 class ArticleResource extends Resource
 {
@@ -63,7 +64,30 @@ class ArticleResource extends Resource
                     ->label('SEO Deskripsi')
                     ->rows(3),
                 Forms\Components\Textarea::make('excerpt')->label('Deskripsi Singkat')->rows(3),
-                Forms\Components\RichEditor::make('body')->label('Konten')->required()->columnSpan('full'),
+                TiptapEditor::make('body')
+                    ->label('Konten')
+                    ->required()
+                    ->tools([
+                        'heading',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strike',
+                        'blockquote',
+                        'bullet-list',
+                        'ordered-list',
+                        'code-block',
+                        'link',
+                        'table',
+                        'undo',
+                        'redo',
+                        'align-left',
+                        'align-center',
+                        'align-right',
+                        'align-justify',
+                    ])
+                    ->extraInputAttributes(['style' => 'min-height: 15rem;'])
+                    ->columnSpan('full'),
                 Forms\Components\Toggle::make('is_published')->label('Publikasi')->default(true),
                 Forms\Components\DateTimePicker::make('published_at')->label('Tanggal Publikasi')
             ]);
