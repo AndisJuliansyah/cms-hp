@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
 use App\Models\ArticleCategory;
 use App\Models\ArticleImage;
+use Illuminate\Support\Str;
 
 class Article extends Model
 {
@@ -41,4 +42,16 @@ class Article extends Model
         return $this->hasMany(ArticleImage::class);
     }
 
+    public function setBodyAttribute($value)
+    {
+        $backendUrl = config('app.url');
+
+        $value = preg_replace(
+            '/src=[\'"]\/storage\/(.*?)[\'"]/',
+            'src="' . $backendUrl . '/storage/$1"',
+            $value
+        );
+
+        $this->attributes['body'] = $value;
+    }
 }

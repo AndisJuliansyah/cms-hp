@@ -56,14 +56,15 @@ class EventResource extends Resource
                     ->maxLength(160)
                     ->helperText('Deskripsi SEO event, maksimal 160 karakter'),
                 FileUpload::make('poster_path')
-                ->label('Poster')
+                    ->label('Poster')
                     ->image()
                     ->required()
                     ->directory('events')
                     ->disk('public')
                     ->preserveFilenames()
                     ->openable()
-                    ->previewable(),
+                    ->previewable()
+                    ->maxSize(2048),
 
                 Forms\Components\DateTimePicker::make('event_date')
                     ->label('Tanggal Event')

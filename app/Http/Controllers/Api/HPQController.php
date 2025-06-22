@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Hpq;
 use App\Helpers\ApiResponse;
 use Exception;
@@ -16,6 +17,7 @@ class HPQController extends Controller
     {
         try {
             $perPage = $request->get('per_page', 10);
+            $page = $request->get('page', 1);
             $search = $request->get('search');
             $coffeeType = $request->get('coffee_type');
 
@@ -35,16 +37,53 @@ class HPQController extends Controller
                 });
             }
 
-            $hpqs = $query->latest()->paginate($perPage);
+            $hpqs = $query->get();
+
+            $sorted = $hpqs->sort(function ($a, $b) {
+            $scoreA = $a->score_summary['total_score'] ?? 0;
+            $scoreB = $b->score_summary['total_score'] ?? 0;
+
+            if ($scoreA !== $scoreB) {
+                return $scoreB <=> $scoreA;
+            }
+
+            if ($a->status !== $b->status) {
+                return $a->status <=> $b->status;
+            }
+
+                return $b->updated_at <=> $a->updated_at;
+            })->values();
+
+            $paged = $sorted->slice(($page - 1) * $perPage, $perPage)->values();
+
+            $paginator = new LengthAwarePaginator(
+                $paged,
+                $sorted->count(),
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+
+            if ($paginator->isEmpty()) {
+                return ApiResponse::success([
+                    'items' => [],
+                    'pagination' => [
+                        'current_page' => $paginator->currentPage(),
+                        'last_page' => $paginator->lastPage(),
+                        'per_page' => $paginator->perPage(),
+                        'total' => $paginator->total(),
+                    ]
+                ], 'Tidak ada data HPQ yang ditemukan sesuai filter atau pencarian');
+            }
 
             if ($hpqs->isEmpty()) {
                 return ApiResponse::success([
                     'items' => [],
                     'pagination' => [
-                        'current_page' => $hpqs->currentPage(),
-                        'last_page' => $hpqs->lastPage(),
-                        'per_page' => $hpqs->perPage(),
-                        'total' => $hpqs->total(),
+                        'current_page' => $paginator->currentPage(),
+                        'last_page' => $paginator->lastPage(),
+                        'per_page' => $paginator->perPage(),
+                        'total' => $paginator->total(),
                     ]
                 ], 'Tidak ada data HPQ yang ditemukan sesuai filter atau pencarian');
             }
@@ -81,10 +120,10 @@ class HPQController extends Controller
             return ApiResponse::success([
                 'items' => $items,
                 'pagination' => [
-                    'current_page' => $hpqs->currentPage(),
-                    'last_page' => $hpqs->lastPage(),
-                    'per_page' => $hpqs->perPage(),
-                    'total' => $hpqs->total(),
+                    'current_page' => $paginator->currentPage(),
+                    'last_page' => $paginator->lastPage(),
+                    'per_page' => $paginator->perPage(),
+                    'total' => $paginator->total(),
                 ]
             ], 'Daftar HPQ berhasil diambil');
         } catch (Exception $e) {

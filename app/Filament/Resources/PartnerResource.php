@@ -37,7 +37,7 @@ class PartnerResource extends Resource
                     ->image()
                     ->directory('partners')
                     ->imagePreviewHeight('100')
-                    ->maxSize(1024),
+                    ->maxSize(2048),
                 TextInput::make('url')->url()->required()->label('Website'),
                 Forms\Components\Toggle::make('is_active')
                     ->label('Active')

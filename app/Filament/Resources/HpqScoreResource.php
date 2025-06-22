@@ -37,7 +37,13 @@ class HpqScoreResource extends Resource
                         ignoreRecord: true,
                         table: HpqScore::class,
                         column: 'code_hpq',
-                        modifyRuleUsing: fn ($rule) => $rule->where(fn ($query) => $query->where('jury_id', auth()->id()))
+                        modifyRuleUsing: function ($rule, $livewire) {
+                            $juryId = data_get($livewire->record, 'jury_id') ?? auth()->id();
+
+                            return $rule->where(fn ($query) =>
+                                $query->where('jury_id', $juryId)
+                            );
+                        }
                     ),
                 Forms\Components\TextInput::make('judge_name')
                     ->label('Nama Penilai')
