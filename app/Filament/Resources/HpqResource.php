@@ -29,6 +29,13 @@ class HpqResource extends Resource
     {
         return $form
                 ->schema([
+                    TextInput::make('code_hpq')
+                        ->label('HPQ Code')
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(255)
+                        ->visible(fn ($livewire) => str($livewire::class)->contains('Edit')),
+
                     TextInput::make('email')
                         ->email()
                         ->required(),

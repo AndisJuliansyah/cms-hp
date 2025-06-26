@@ -13,7 +13,7 @@ class PartnerController extends Controller
     public function index()
     {
         try {
-            $partners = Partner::all()->map(function ($partner) {
+            $partners = Partner::where('is_active', 1)->get()->map(function ($partner) {
                 return [
                     'id' => $partner->id,
                     'name' => $partner->name,

@@ -16,7 +16,9 @@ class ArticleController extends Controller
             $perPage = $request->get('per_page', 10);
             $search = $request->get('search');
 
-            $query = Article::with(['category', 'images', 'author'])->latest();
+            $query = Article::with(['category', 'images', 'author'])
+                    ->where('is_published', 1)
+                    ->latest();
 
             if ($search) {
                 $query->where(function ($q) use ($search) {

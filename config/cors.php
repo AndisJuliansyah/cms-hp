@@ -6,7 +6,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://212.85.26.64:3000'],
+    'allowed_origins' => ['https://heavenlypour.com'],
 
     'allowed_origins_patterns' => [],
 

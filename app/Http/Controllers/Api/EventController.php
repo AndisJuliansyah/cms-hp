@@ -15,7 +15,7 @@ class EventController extends Controller
         try {
             $perPage = $request->get('per_page', 10);
 
-            $events = Event::latest('event_date')->paginate($perPage);
+            $events = Event::latest('event_date')->where('is_published', 1)->paginate($perPage);
 
             $items = $events->map(function ($event) {
                 return [
