@@ -30,8 +30,7 @@ class ArticleResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->label('Judul')
-                    ->required()
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                    ->required(),
                 Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
                 Forms\Components\Select::make('article_category_id')
                     ->label('Kategori')
@@ -116,6 +115,7 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('author.name')->label('Penulis'),
                 Tables\Columns\BooleanColumn::make('is_published')->label('Publikasi'),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
