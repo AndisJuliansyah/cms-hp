@@ -103,8 +103,8 @@ class Hpq extends Model
 
         $finalScore = $total - $totalDefect;
 
-        $summary['total_defect'] = $totalDefect;
-        $summary['total_score_before_defect'] = round($total, 2);
+        // $summary['total_defect'] = $totalDefect;
+        // $summary['total_score_before_defect'] = round($total, 2);
         $summary['total_score'] = round($finalScore, 2);
 
         return $summary;
