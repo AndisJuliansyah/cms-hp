@@ -181,7 +181,18 @@ class HPQController extends Controller
                         'sweetness' => $score->sweetness,
                         'clean_cup' => $score->clean_cup,
                         'overall' => $score->overall,
-                        'notes' => $score->notes
+                        'defect' => $score->defect,
+                        'assesment_fragrance' => $score->notes,
+                        'assesment_aroma' => $score->notes,
+                        'assesment_flavor' => $score->notes,
+                        'assesment_aftertaste' => $score->notes,
+                        'assesment_acidity' => $score->notes,
+                        'assesment_sweetness' => $score->notes,
+                        'assesment_body' => $score->notes,
+                        'assesment_defect' => $score->notes,
+                        'fragrance_aroma_notes' => $score->notes,
+                        'flavor_aftertaste_notes' => $score->notes,
+                        'acidity_mouthfeel_other_notes' => $score->notes,
                     ];
                 }),
             ];

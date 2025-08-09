@@ -11,7 +11,10 @@ class HpqScore extends Model
 {
     protected $fillable = [
         'code_hpq', 'jury_id', 'judge_name', 'fragrance_aroma', 'flavor', 'aftertaste', 'acidity',
-        'body', 'balance', 'uniformity', 'sweetness', 'clean_cup', 'overall', 'notes'
+        'body', 'balance', 'uniformity', 'sweetness', 'clean_cup', 'overall', 'notes', 'defect',
+        'assesment_fragrance', 'assesment_aroma', 'assesment_flavor', 'assesment_aftertaste',
+        'assesment_acidity', 'assesment_sweetness', 'assesment_body', 'assesment_defect', 'fragrance_aroma_notes',
+        'flavor_aftertaste_notes', 'acidity_mouthfeel_other_notes'
     ];
 
     public function hpq()
@@ -44,7 +47,12 @@ class HpqScore extends Model
             'clean_cup', 'overall',
         ];
 
-        return collect($fields)->sum(fn($field) => $this->{$field});
+
+        $baseScore = collect($fields)->sum(fn($field) => $this->{$field} ?? 0);
+
+        $defectDeduction = $this->defect ?? 0;
+
+        return $baseScore - $defectDeduction;
     }
 
     protected static function booted()

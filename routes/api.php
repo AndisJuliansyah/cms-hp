@@ -2,7 +2,6 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Middleware\ApiTokenMiddleware;
 use App\Http\Controllers\Api\HPQController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\EventController;
