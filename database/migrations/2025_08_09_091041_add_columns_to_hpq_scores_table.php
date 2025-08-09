@@ -35,7 +35,7 @@ return new class extends Migration
                 $table->enum('assesment_body', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
                     ->nullable()
                     ->after('assesment_sweetness');
-                $table->enum('defect', ['None', 'Moldy', 'Phenolic', 'Potato'])
+                $table->enum('assesment_defect', ['None', 'Moldy', 'Phenolic', 'Potato'])
                     ->nullable()
                     ->after('assesment_body');
                 $table->string('fragrance_aroma_notes')->nullable()->after('defect');
