@@ -29,12 +29,15 @@ return new class extends Migration
                 $table->enum('assesment_Acidity', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
                     ->nullable()
                     ->after('assesment_aftertaste');
-                $table->enum('assesment_Sweetness', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
+                $table->enum('assesment_sweetness', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
                     ->nullable()
                     ->after('assesment_acidity');
-                $table->enum('assesment_body', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
+                $table->enum('assesment_uniformity', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
                     ->nullable()
                     ->after('assesment_sweetness');
+                $table->enum('assesment_body', ['Low', 'Medium', 'High', 'None', '1', '2', '3', '4', '5'])
+                    ->nullable()
+                    ->after('assesment_uniformity');
                 $table->enum('assesment_defect', ['None', 'Moldy', 'Phenolic', 'Potato'])
                     ->nullable()
                     ->after('assesment_body');

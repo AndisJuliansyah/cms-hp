@@ -142,6 +142,9 @@ class HPQController extends Controller
                 return ApiResponse::error('Data HPQ tidak ditemukan', 404);
             }
 
+            // Generate assessment summary berdasarkan nilai terbanyak dari juri
+            $assessmentSummary = $this->generateAssessmentSummary($hpq->scores);
+
             $data = [
                 'id' => $hpq->id,
                 'code_hpq' => $hpq->code_hpq,
@@ -167,6 +170,7 @@ class HPQController extends Controller
                 'status' => $hpq->status,
                 'updated_at' => $hpq->updated_at,
                 'score_summary' => $hpq->score_summary,
+                'assessment_summary' => $assessmentSummary,
                 'scores' => $hpq->scores->map(function ($score) {
                     return [
                         'id' => $score->id,
@@ -182,17 +186,17 @@ class HPQController extends Controller
                         'clean_cup' => $score->clean_cup,
                         'overall' => $score->overall,
                         'defect' => $score->defect,
-                        'assesment_fragrance' => $score->notes,
-                        'assesment_aroma' => $score->notes,
-                        'assesment_flavor' => $score->notes,
-                        'assesment_aftertaste' => $score->notes,
-                        'assesment_acidity' => $score->notes,
-                        'assesment_sweetness' => $score->notes,
-                        'assesment_body' => $score->notes,
-                        'assesment_defect' => $score->notes,
-                        'fragrance_aroma_notes' => $score->notes,
-                        'flavor_aftertaste_notes' => $score->notes,
-                        'acidity_mouthfeel_other_notes' => $score->notes,
+                        'assesment_fragrance' => $score->assesment_fragrance,
+                        'assesment_aroma' => $score->assesment_aroma,
+                        'assesment_flavor' => $score->assesment_flavor,
+                        'assesment_aftertaste' => $score->assesment_aftertaste,
+                        'assesment_acidity' => $score->assesment_acidity,
+                        'assesment_sweetness' => $score->assesment_sweetness,
+                        'assesment_body' => $score->assesment_body,
+                        'assesment_defect' => $score->assesment_defect,
+                        'fragrance_aroma_notes' => $score->fragrance_aroma_notes,
+                        'flavor_aftertaste_notes' => $score->flavor_aftertaste_notes,
+                        'acidity_mouthfeel_other_notes' => $score->acidity_mouthfeel_other_notes,
                     ];
                 }),
             ];
@@ -257,5 +261,48 @@ class HPQController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    private function generateAssessmentSummary($scores)
+    {
+        if ($scores->count() == 0) {
+            return null;
+        }
+
+        $assessmentFields = [
+            'assesment_fragrance',
+            'assesment_aroma',
+            'assesment_flavor',
+            'assesment_aftertaste',
+            'assesment_acidity',
+            'assesment_sweetness',
+            'assesment_uniformity',
+            'assesment_body',
+            'assesment_defect'
+        ];
+
+        $summary = [];
+
+        foreach ($assessmentFields as $field) {
+            // Hitung frekuensi setiap nilai untuk field ini
+            $valueCount = [];
+
+            foreach ($scores as $score) {
+                $value = $score->$field;
+                if (!empty($value)) {
+                    $valueCount[$value] = ($valueCount[$value] ?? 0) + 1;
+                }
+            }
+
+            // Pilih nilai dengan frekuensi terbanyak
+            if (!empty($valueCount)) {
+                $mostFrequent = array_keys($valueCount, max($valueCount))[0];
+                $summary[$field] = $mostFrequent;
+            } else {
+                $summary[$field] = null;
+            }
+        }
+
+        return $summary;
     }
 }

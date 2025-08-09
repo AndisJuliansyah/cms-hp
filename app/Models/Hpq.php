@@ -92,7 +92,20 @@ class Hpq extends Model
             $total += $average;
         }
 
-        $summary['total_score'] = round($total, 2);
+        $totalDefect = 0;
+        $scores = $this->scores()->get();
+
+        foreach ($scores as $score) {
+            if (!empty($score->defect)) {
+                $totalDefect += $score->defect;
+            }
+        }
+
+        $finalScore = $total - $totalDefect;
+
+        $summary['total_defect'] = $totalDefect;
+        $summary['total_score_before_defect'] = round($total, 2);
+        $summary['total_score'] = round($finalScore, 2);
 
         return $summary;
     }
