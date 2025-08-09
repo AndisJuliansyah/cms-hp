@@ -478,12 +478,6 @@ class HpqResource extends Resource
                             ->label('Acidity, Mouthfeel & Other Notes')
                             ->rows(3)
                             ->nullable(),
-
-                        Textarea::make('notes')
-                            ->label('Assessment Notes')
-                            ->rows(4)
-                            ->placeholder('Enter additional notes if any...')
-                            ->maxLength(1000),
                     ])
                     ->maxItems(3)
                     ->defaultItems(1)
