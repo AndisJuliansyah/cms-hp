@@ -34,6 +34,7 @@ class UserResource extends Resource
                     ->maxLength(255)
                     ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
                     ->required(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
+                    ->dehydrated(fn ($state) => filled($state))
                     ->label('Password'),
                 Forms\Components\Select::make('roles')
                     ->relationship('roles', 'name')
