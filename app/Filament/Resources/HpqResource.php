@@ -26,6 +26,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\Hidden;
 
 class HpqResource extends Resource
 {
@@ -244,25 +245,31 @@ class HpqResource extends Resource
 
                     Textarea::make('notes'),
 
+                    Textarea::make('fragrance_aroma_notes')
+                            ->label('Fragrance & Aroma Notes')
+                            ->rows(3)
+                            ->nullable(),
+
+                        Textarea::make('flavor_aftertaste_notes')
+                            ->label('Flavor & Aftertaste Notes')
+                            ->rows(3)
+                            ->nullable(),
+
+                        Textarea::make('acidity_mouthfeel_other_notes')
+                            ->label('Acidity, Mouthfeel & Other Notes')
+                            ->rows(3)
+                            ->nullable(),
+
                     // --- Tabs untuk Penilaian Juri ---
                     Repeater::make('hpq_scores')
                     ->label('Jury Assessment')
                     ->relationship('scores')
                     ->visible(fn () => auth()->user()->hasRole('Super Admin'))
                     ->schema([
-                        TextInput::make('code_hpq')
-                            ->label('HPQ Code')
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255)
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                $set('hpq_scores', collect($state ? [] : $get('hpq_scores') ?? [])->map(function ($item) use ($state) {
-                                    $item['code_hpq'] = $state;
-                                    return $item;
-                                })->toArray());
-                            })
-                            ->visible(fn ($livewire) => Str::contains($livewire::class, 'Edit')),
+                        Hidden::make('id'),
+                        Hidden::make('code_hpq')
+                            ->default(fn (\Filament\Forms\Get $get) => $get('../../id')),
+
                         Select::make('jury_id')
                             ->label('Judge Name')
                             ->options(function () {
@@ -272,17 +279,19 @@ class HpqResource extends Resource
                             })
                             ->required()
                             ->rules([
-                                fn (\Filament\Forms\Get $get, $record) => \Illuminate\Validation\Rule::unique(\App\Models\HpqScore::class, 'jury_id')
-                                    ->where('code_hpq', $record ? $record->hpq->code_hpq : $get('../code_hpq'))
-                                    ->ignore($record ? $record->id : null),
+                                function (\Filament\Forms\Get $get, $record) {
+                                    $codeHpq = $get('code_hpq');
+                                    $scoreId = $get('id');
+                                    return \Illuminate\Validation\Rule::unique('hpq_scores', 'jury_id')
+                                        ->where('code_hpq', $codeHpq)
+                                        ->ignore($scoreId);
+                                }
                             ])
                             ->afterStateUpdated(function ($state, \Filament\Forms\Set $set) {
                                 $user = \App\Models\User::find($state);
-                                $set('judge_name', $user ? $user->name : null);
-                            })
-                            ->disabled(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\EditRecord),
+                                $set('judge_name', $user?->name);
+                            }),
 
-                        // Hidden field untuk menyimpan judge_name
                         Forms\Components\Hidden::make('judge_name'),
 
                         Fieldset::make('fragrance')
@@ -478,6 +487,12 @@ class HpqResource extends Resource
                             ->label('Acidity, Mouthfeel & Other Notes')
                             ->rows(3)
                             ->nullable(),
+
+                        Textarea::make('notes')
+                            ->label('Catatan Penilaian')
+                            ->rows(4)
+                            ->placeholder('Masukkan catatan tambahan jika ada...')
+                            ->maxLength(1000),
                     ])
                     ->maxItems(3)
                     ->defaultItems(1)

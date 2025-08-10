@@ -12,14 +12,14 @@ class HpqScore extends Model
     protected $fillable = [
         'code_hpq', 'jury_id', 'judge_name', 'fragrance_aroma', 'flavor', 'aftertaste', 'acidity',
         'body', 'balance', 'uniformity', 'sweetness', 'clean_cup', 'overall', 'notes', 'defect',
-        'assesment_fragrance', 'assesment_aroma', 'assesment_flavor', 'assesment_aftertaste',
+        'assesment_fragrance', 'assesment_aroma', 'assesment_flavor', 'assesment_aftertaste', 'assesment_uniformity',
         'assesment_acidity', 'assesment_sweetness', 'assesment_body', 'assesment_defect', 'fragrance_aroma_notes',
         'flavor_aftertaste_notes', 'acidity_mouthfeel_other_notes'
     ];
 
     public function hpq()
     {
-        return $this->belongsTo(Hpq::class, 'code_hpq', 'code_hpq');
+        return $this->belongsTo(Hpq::class, 'hpq_id', 'id');
     }
 
     public function jury()

@@ -16,4 +16,14 @@ class EditHpq extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $record = $this->record;
+        $scores = $record->scores;
+
+        foreach ($scores as $score) {
+            $score->update(['code_hpq' => $record->code_hpq]);
+        }
+    }
 }

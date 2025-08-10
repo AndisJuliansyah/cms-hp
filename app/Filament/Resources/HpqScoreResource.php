@@ -31,7 +31,7 @@ class HpqScoreResource extends Resource
             ->schema([
                 Forms\Components\Select::make('code_hpq')
                     ->label('Kode HPQ')
-                    ->options(\App\Models\Hpq::pluck('code_hpq', 'code_hpq'))
+                    ->options(\App\Models\Hpq::pluck('code_hpq', 'id'))
                     ->required()
                     ->unique(
                         ignoreRecord: true,

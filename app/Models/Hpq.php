@@ -30,6 +30,9 @@ class Hpq extends Model
         'specific_goal',
         'notes',
         'status',
+        'fragrance_aroma_notes',
+        'flavor_aftertaste_notes',
+        'acidity_mouthfeel_other_notes'
     ];
 
     protected $casts = [
@@ -56,7 +59,7 @@ class Hpq extends Model
 
     public function scores(): HasMany
     {
-        return $this->hasMany(HpqScore::class, 'code_hpq', 'code_hpq');
+        return $this->hasMany(HpqScore::class, 'hpq_id', 'id');
     }
 
     public function getIsCompleteAttribute(): bool
@@ -103,7 +106,7 @@ class Hpq extends Model
 
         $finalScore = $total - $totalDefect;
 
-        // $summary['total_defect'] = $totalDefect;
+        $summary['total_defect'] = $totalDefect;
         // $summary['total_score_before_defect'] = round($total, 2);
         $summary['total_score'] = round($finalScore, 2);
 
