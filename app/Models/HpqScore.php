@@ -32,7 +32,7 @@ class HpqScore extends Model
         $fields = [
             'fragrance_aroma', 'flavor', 'aftertaste', 'acidity',
             'body', 'balance', 'uniformity', 'sweetness',
-            'clean_cup', 'overall',
+            'clean_cup', 'overall'
         ];
 
         $total = collect($fields)->sum(fn($field) => $this->{$field});
@@ -46,7 +46,6 @@ class HpqScore extends Model
             'body', 'balance', 'uniformity', 'sweetness',
             'clean_cup', 'overall',
         ];
-
 
         $baseScore = collect($fields)->sum(fn($field) => $this->{$field} ?? 0);
 

@@ -95,8 +95,10 @@ class Hpq extends Model
             $total += $average;
         }
 
-        $totalDefect = 0;
         $scores = $this->scores()->get();
+
+        $defectCount = $scores->whereNotNull('defect')->count();
+        $totalDefect = 0;
 
         foreach ($scores as $score) {
             if (!empty($score->defect)) {
@@ -104,13 +106,15 @@ class Hpq extends Model
             }
         }
 
-        $finalScore = $total - $totalDefect;
+        $averageDefect = $defectCount > 0 ? $totalDefect / $defectCount : 0;
 
-        $summary['total_defect'] = $totalDefect;
-        // $summary['total_score_before_defect'] = round($total, 2);
+        $finalScore = $total - $averageDefect;
+
+        $summary['total_defect'] = round($averageDefect, 2);
         $summary['total_score'] = round($finalScore, 2);
 
         return $summary;
     }
+
 
 }
