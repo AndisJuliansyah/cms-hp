@@ -279,8 +279,8 @@ class HPQController extends Controller
             'assesment_aftertaste',
             'assesment_acidity',
             'assesment_sweetness',
-            'assesment_uniformity',
             'assesment_body',
+            'assesment_uniformity',
             'assesment_defect'
         ];
 
